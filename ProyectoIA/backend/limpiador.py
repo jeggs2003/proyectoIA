@@ -9,7 +9,8 @@ nltk.download('wordnet')
 from nltk.tokenize import word_tokenize
 
 # Cambia esto por la ruta local a la carpeta "bbc"
-DATASET_DIR = "C:\\Users\\javie\\Downloads\\archive\\BBC News Summary\\Summaries"
+# DATASET_DIR = "C:\\Users\\javie\\Downloads\\archive\\BBC News Summary\\Summaries"
+DATASET_DIR = "C:\Users\kathe\OneDrive\Escritorio\proyectoIA\archive"
 
 # Cargar datos
 def cargar_datos(dataset_dir):

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Estadísticas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-light">
+    <div class="container mt-5">
+        <h3>Estadísticas de clasificación</h3>
+        <ul class="list-group mt-4">
+            {% for categoria, cantidad in conteo.items() %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                {{ categoria }}
+                <span class="badge bg-primary rounded-pill">{{ cantidad }}</span>
+            </li>
+            {% endfor %}
+        </ul>
+        <a href="/" class="btn btn-secondary mt-4">Volver al inicio</a>
+    </div>
+</body>
+
+</html>
