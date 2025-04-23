@@ -34,11 +34,9 @@ python
 
 ### 4. Preprocesar los datos
 
-Edita el archivo `limpiador.py` y cambia esta línea por la ruta local a tu dataset:
+El archivo `limpiador.py` ahora detecta automáticamente la ruta al dataset usando `pathlib`, por lo que no es necesario cambiar rutas manualmente.
 
-```python
-DATASET_DIR = "C:\Ruta\a\la\carpeta\BBC News Summary\Summaries"
-```
+Asegúrate de que la carpeta `archive/BBC News Summary/Summaries` esté al mismo nivel que la raíz del proyecto (donde está el `README.md`).
 
 Luego ejecuta:
 
