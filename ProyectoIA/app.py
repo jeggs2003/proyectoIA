@@ -2,6 +2,7 @@ from flask import Flask, render_template, request
 from backend.modelo_naive import NaiveBayesClassifier
 from collections import Counter
 import json
+import os
 
 app = Flask(__name__)
 
@@ -20,15 +21,67 @@ def cargar_modelo(ruta='modelo_naive.json'):
 
 modelo = cargar_modelo()
 
+#--------------------------------------------------------------------------------------
+# Historial file path
+HISTORIAL_PATH = 'historial.json'
+
+def cargar_historial():
+    if os.path.exists(HISTORIAL_PATH):
+        with open(HISTORIAL_PATH, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    return []
+
+def guardar_en_historial(texto, categoria):
+    historial = cargar_historial()
+    historial.append({'texto': texto, 'categoria': categoria})
+    with open(HISTORIAL_PATH, 'w', encoding='utf-8') as f:
+        json.dump(historial, f, ensure_ascii=False, indent=4)
+#-----------------------------------------------------------------------------------------------
+
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    resultado = ""
+    resultado = None
+    clase_categoria = 'default-box'
+    texto_original = ''
+
     if request.method == 'POST':
         texto = request.form['texto']
+        texto_original = texto
         texto_limpio = limpiar_texto(texto)
         prediccion = modelo.predecir(texto_limpio)
-        resultado = f"Categoría predicha: {prediccion.capitalize()}"
-    return render_template('index.html', resultado=resultado)
+
+        # Mapeo de colores para cada categoría
+        color_por_categoria = {
+            'business': 'business',
+            'entertainment': 'entertainment',
+            'politics': 'politics',
+            'sport': 'sport',
+            'tech': 'tech'
+        }
+
+        clase_categoria = color_por_categoria.get(prediccion.lower(), 'default-box')
+        resultado = prediccion.capitalize()
+
+        guardar_en_historial(texto, resultado)
+    return render_template('index.html', resultado=resultado, clase_categoria=clase_categoria, texto_original=texto_original)
+    
+        #clase_categoria = color_por_categoria.get(prediccion.lower(), 'bg-secondary')
+        #resultado = f"Categoría predicha: {prediccion.capitalize()}"
+    #return render_template('index.html', resultado=resultado, clase_categoria=clase_categoria)
+
+
+@app.route('/historial')
+def historial():
+    datos = cargar_historial()
+    return render_template('historial.html', historial=datos)
+
+@app.route('/estadisticas')
+def estadisticas():
+    datos = cargar_historial()
+    conteo = Counter(item['categoria'] for item in datos)
+    return render_template('estadisticas.html', conteo=conteo)
+
+
 
 def limpiar_texto(texto):
     import re

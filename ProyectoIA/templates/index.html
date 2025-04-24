@@ -1,49 +1,217 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <title>Clasificador de Noticias</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    
     <style>
-        body {
-            font-family: Arial;
-            background-color: #f7f7f7;
-            margin: 40px;
+
+        .navbar {
+            padding-top: 21px;
+            padding-bottom: 21px;
         }
-        .container {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            max-width: 600px;
-            margin: auto;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+
+        .custom-btn {
+            background-color:rgb(89, 90, 92);   
+            color: white;
+            border: 2px solid rgb(89, 90, 92);
+            border-radius: 30px;         
+            padding: 7px 22px;
+            transition: 0.3s ease-in-out;
+            color: rgb(255, 255, 255);
+            font-weight: 500;
         }
-        textarea {
-            width: 100%;
-            height: 150px;
+          
+        .custom-btn:hover {
+            background-color: white;
+            color:rgb(89, 90, 92);
+            border: 2px solid rgb(89, 90, 92);
         }
-        button {
-            margin-top: 10px;
-            padding: 10px 20px;
+
+        .custom-btn2 {
+            background-color:rgb(87, 138, 241);   
+            color: white;
+            border: 2px solid rgb(87, 138, 241);
+            border-radius: 30px;         
+            padding: 7px 22px;
+            transition: 0.3s ease-in-out;
+            color: rgb(255, 255, 255);
+            font-weight: 500;
         }
-        .resultado {
-            margin-top: 20px;
-            font-weight: bold;
+          
+        .custom-btn2:hover {
+            background-color: white;
+            color:rgb(87, 138, 241);
+            border: 2px solid rgb(87, 138, 241);
+        }
+
+        .categoria-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px 20px 15px 30px; /* top, right, bottom, left */
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background-color: white !important;
             color: #333;
+            transition: all 0.3s ease;
         }
+
+        .categoria-card i {
+            font-size: 28px;           /* 24 */
+            width: 36px;               /* 30 */
+            align-self: center;        
+            line-height: 1;   
+            transition: color 0.3s ease;         
+        }
+
+        .categoria-card.business i, .categoria-card.business strong { color: #0d6efd; }
+        .categoria-card.entertainment i, .categoria-card.entertainment strong { color: #dc3545; }
+        .categoria-card.politics i, .categoria-card.politics strong { color: #212529; }
+        .categoria-card.sport i, .categoria-card.sport strong { color: #fd7e14; }
+        .categoria-card.tech i, .categoria-card.tech strong { color: #17a2b8; }
+        
+        .categoria-card:hover i, 
+        .categoria-card:hover strong {
+            color: white !important;
+        }
+
+        .categoria-card.business:hover {
+            background-color: #0d6efd !important;
+            color: white;
+        }
+        .categoria-card.entertainment:hover {
+            background-color: #dc3545 !important;
+            color: white;
+        }
+        .categoria-card.politics:hover {
+            background-color: #212529 !important;
+            color: white;
+        }
+        .categoria-card.sport:hover {
+            background-color: #fd7e14 !important;
+            color: white;
+        }
+        .categoria-card.tech:hover {
+            background-color: #17a2b8 !important;
+            color: white;
+        }
+          
+        .categoria-card:hover {
+            transform: scale(1.01);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .default-box {
+            background-color: rgb(173, 175, 179);
+            color: #495057;
+        }
+
+        .resultado-box {
+            border-radius: 8px;
+            padding: 20px;
+            color: #fff;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .resultado-box.business { background-color: #0d6efd; }
+        .resultado-box.entertainment { background-color: #dc3545; }
+        .resultado-box.politics { background-color: #212529; }
+        .resultado-box.sport { background-color: #fd7e14; }
+        .resultado-box.tech { background-color: #17a2b8; }
+
     </style>
 </head>
-<body>
-<div class="container">
-    <h2>Clasificador de Noticias - Naïve Bayes</h2>
-    <form method="post">
-        <label for="texto">Pega aquí una noticia:</label><br>
-        <textarea name="texto" required></textarea><br>
-        <button type="submit">Clasificar</button>
-    </form>
 
-    {% if resultado %}
-        <div class="resultado">{{ resultado }}</div>
-    {% endif %}
-</div>
+<body class="bg-light">
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm">
+        
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="#" style="font-size: 35px">📰  Clasificador de Noticias</a>
+            <div class="d-flex gap-3">
+                <a href="/" class="btn custom-btn">Inicio</a>
+                <a href="/historial" class="btn custom-btn">Historial</a>
+                <a href="/estadisticas" class="btn custom-btn">Estadísticas</a>
+            </div>
+        </div>
+    </nav>
+
+
+    <div class="container mt-5">
+        <div class="row justify-content-center g-5">
+            
+            <!-- Columna izquierda -->
+            <div class="col-md-6">
+                <div class="card mb-4 p-4">
+                    <h5 class="mb-3">Ingresar artículo periodístico</h5>
+                    <form method="post">
+                        <!--<textarea class="form-control mb-3" name="texto" rows="6" placeholder="Pega aquí tu noticia..." required></textarea> -->
+                        <textarea class="form-control mb-3" name="texto" rows="6" placeholder="Pega aquí tu noticia..." required>{{ texto_original }}</textarea>
+
+                        <div class="d-flex gap-2 mt-2">
+                            <button type="submit" class="btn custom-btn2 w-50">Categorizar</button>
+                            <button type="button" class="btn custom-btn2 w-50" onclick="limpiarTexto()">Limpiar</button>
+                        </div>
+                        
+                    </form>
+                </div>
+
+                <div class="card p-4">
+                    <h6>Categoría predicha:</h6>
+                    <div class="resultado-box mt-1 {{ clase_categoria }}">
+                        {% if resultado %}
+                            {{ resultado }}
+                        {% else %}
+                            Aquí aparecerá la categoría de su artículo.
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Columna derecha -->
+            <div class="col-md-4">
+                <h5 class="mb-3">Tipos de categorías disponibles:</h5>
+
+                <div class="categoria-card business">
+                    <i class="fas fa-city"></i>
+                    <div><strong>Business / Negocios</strong><br><small>Economía, finanzas, empresas, mercado global.</small></div>
+                </div>
+                <div class="categoria-card entertainment">
+                    <i class="fas fa-film"></i>
+                    <div><strong>Entertainment / Entretenimiento</strong><br><small>Cine, series, música, celebridades, cultura pop.</small></div>
+                </div>
+                <div class="categoria-card politics">
+                    <i class="fas fa-landmark"></i>
+                    <div><strong>Politics / Politica </strong><br><small>Gobierno, leyes, elecciones, diplomacia y más.</small></div>
+                </div>
+                <div class="categoria-card sport">
+                    <i class="fas fa-basketball-ball"></i>
+                    <div><strong>Sports / Deportes</strong><br><small>Fútbol, béisbol, baloncesto, olimpiadas, etc.</small></div>
+                </div>
+                <div class="categoria-card tech">
+                    <i class="fas fa-microchip"></i>
+                    <div><strong>Tech / Tecnología</strong><br><small>Tecnología, startups, innovación, ciencia digital.</small></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        function limpiarTexto() {
+            const textarea = document.querySelector('textarea[name="texto"]');
+            textarea.value = '';
+
+            const resultadoBox = document.querySelector('.resultado-box');
+            resultadoBox.className = 'resultado-box mt-1 default-box';
+            resultadoBox.textContent = 'Aquí aparecerá la categoría de su artículo.';
+        }
+    </script>
+
 </body>
 </html>

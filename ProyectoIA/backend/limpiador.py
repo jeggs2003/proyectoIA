@@ -7,9 +7,12 @@ from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 nltk.download('wordnet')
 from nltk.tokenize import word_tokenize
+from pathlib import Path
 
-# Cambia esto por la ruta local a la carpeta "bbc"
-DATASET_DIR = "C:\\Users\\javie\\Downloads\\archive\\BBC News Summary\\Summaries"
+BASE_DIR = Path(__file__).resolve().parent
+DATASET_DIR = (BASE_DIR / ".." / ".." / "archive" / "BBC News Summary" / "Summaries").resolve()
+
+
 
 # Cargar datos
 def cargar_datos(dataset_dir):
@@ -51,3 +54,5 @@ if __name__ == "__main__":
 
     # Guardar CSV para entrenamiento posterior
     df.to_csv("noticias_limpias.csv", index=False)
+
+
